@@ -3,7 +3,7 @@ from pathlib import Path
 from datetime import datetime
 
 INPUT_JSON = Path("parsed_output.json")
-OUTPUT_HTML = Path("discovery_portal.html")
+OUTPUT_HTML = Path("/home/ivps/webserver/kk/discovery_portal.html")
 
 
 def clean_version(version):
@@ -20,21 +20,192 @@ def generate_files(data):
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Storage Discovery Portal</title>
+<title>Storage Discovery</title>
 
-<link rel="stylesheet" href="styles.css">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+<style>
+
+/* ---------- BASE ---------- */
+body {
+    background: #ffffff;
+    margin: 0;
+    padding: 0;
+    font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+}
+
+/* ---------- LAYOUT ---------- */
+.container-fluid {
+    width: 75%;
+    margin: 0 auto;
+}
+
+/* ---------- HEADER TITLE ---------- */
+h3 {
+    margin-top: 10px;
+}
+
+/* ---------- TOP BAR ---------- */
+.top-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+
+    background: white;
+    padding: 16px 0;          /* space from top */
+    margin-top: 10px;         /* gap from browser bar */
+    margin-bottom: 10px;
+
+}
+
+/* ---------- TITLE ---------- */
+.page-title {
+    font-size: 32px;           /* bigger */
+    font-weight: 700;
+    color: #5c6bc0;            /* same as block header */
+    letter-spacing: 0.4px;
+}
+
+/* ---------- SEARCH BOX ---------- */
+.search-box {
+    display: flex;
+    align-items: center;
+
+    background: transparent;
+    border-radius: 30px;
+    padding: 5px 12px;
+
+    width: 25%;
+    min-width: 260px;
+    max-width: 400px;
+
+    border: 1px solid #ccc;
+    transition: all 0.2s ease;
+}
+
+.search-box:focus-within {
+    border-color: #3f51b5;
+}
+
+.search-box input {
+    border: none !important;
+    outline: none !important;
+    box-shadow: none !important;
+
+    background: transparent;
+    width: 100%;
+    font-size: 14px;
+    margin-left: 6px;
+}
+
+.search-icon {
+    font-size: 14px;
+    color: #777;
+}
+
+/* ---------- CLEAR BUTTON ---------- */
+.clear-btn {
+    cursor: pointer;
+    font-size: 14px;
+    color: #999;
+    margin-left: 8px;
+    display: none;
+}
+
+.clear-btn:hover {
+    color: #333;
+}
+
+/* ---------- BLOCK HEADER ---------- */
+.block-header {
+    background: #5c6bc0;
+    color: white;
+    text-align: center;
+    font-weight: 600;
+    padding: 8px;
+    margin-top: 30px;
+    border-radius: 4px;
+}
+
+/* ---------- TABLE TITLES ---------- */
+.table-title {
+    margin-top: 18px;
+    margin-bottom: 6px;
+    font-weight: 600;
+    color: #5c6bc0;
+    letter-spacing: 0.3px;
+    text-transform: uppercase; 
+}
+
+/* ---------- TABLE ---------- */
+.table {
+    margin-bottom: 20px;
+}
+
+/* FORCE header color */
+.table thead th {
+    background-color: #dee4f7 !important;
+}
+
+/* FORCE hover color */
+.table tbody tr:hover td {
+    background-color: #eef1fb !important;
+}
+
+/* ---------- FOOTER ---------- */
+p.text-center {
+    margin-top: 30px;
+    font-size: 12px;
+    color: #777;
+}
+
+.yes-text {
+    color: #2e7d32;   /* green */
+    font-weight: 600;
+}
+
+.no-text {
+    color: #c62828;   /* red */
+    font-weight: 600;
+}
+
+.data-table td {
+    font-size: 13px;
+}
+
+.data-table th {
+    font-size: 14px; /* keep header slightly larger */
+}
+
+</style>
 
 </head>
 
 <body>
 
-<div class="container">
+<div class="container-fluid">
 
-<input id="search" class="search" placeholder="Search anything...">
+<div class="top-bar sticky-search">
+    
+    <div class="page-title">
+        Storage Discovery
+    </div>
+
+    <div class="search-box">
+        <span class="search-icon">🔍</span>
+        <input id="search" type="text" placeholder="Search for anything...">
+        <span id="clearBtn" class="clear-btn">✕</span>
+    </div>
+
+</div>
 
 <div id="app"></div>
 
-<p class="footer">
+<p class="text-center text-muted mt-4" style="font-size:12px;">
 Generated at __TIME__
 </p>
 
@@ -44,77 +215,8 @@ Generated at __TIME__
 const DATA = __DATA__;
 </script>
 
-<script src="app.js"></script>
+<script>
 
-</body>
-</html>
-"""
-
-    css = """
-body {
-    font-family: Segoe UI, Arial, sans-serif;
-    background: white;
-    margin: 0;
-    padding: 20px;
-    color: #000;
-}
-
-.container {
-    width: 75%;
-    margin: 0 auto;
-}
-
-.block-header {
-    background: #5c6bc0;
-    color: white;
-    padding: 10px;
-    font-weight: bold;
-    text-align: center;
-    margin-top: 30px;
-}
-
-.table-title {
-    margin-top: 20px;
-    margin-bottom: 5px;
-    font-weight: bold;
-    color: #3f51b5;
-    text-transform: uppercase;
-}
-
-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-bottom: 20px;
-}
-
-th {
-    background: #d3d6ea;
-}
-
-td, th {
-    border: 1px solid #999;
-    padding: 8px;
-}
-
-.search {
-    width: 100%;
-    padding: 8px;
-    border: 1px solid #999;
-    margin-bottom: 20px;
-}
-
-tr:hover {
-    background: #f5f7ff;
-}
-
-.footer {
-    text-align:center;
-    font-size:12px;
-    margin-top:30px;
-}
-"""
-
-    js = """
 // =====================
 // STATE
 // =====================
@@ -130,17 +232,30 @@ const state = {
 // =====================
 
 function badge(val) {
-    if (val === "yes") return `<span style="background:#c8e6c9;padding:2px 6px;">YES</span>`;
-    if (val === "no") return `<span style="background:#ffcdd2;padding:2px 6px;">NO</span>`;
+    if (val === "yes") return `<span class="yes-text">YES</span>`;
+    if (val === "no") return `<span class="no-text">NO</span>`;
     return val ?? "";
 }
 
 function createTable(title, headers, rows) {
     if (!rows.length) return "";
 
-    let html = `<div class="table-title">${title}</div><table><tr>`;
-    headers.forEach(h => html += `<th>${h}</th>`);
-    html += "</tr>";
+    const colCount = headers.length;
+    const width = (100 / colCount).toFixed(2) + "%";
+
+    let html = `
+        <div class="table-title">${title}</div>
+        <div class="table-responsive">
+        <table class="table table-bordered table-sm table-hover align-middle data-table">
+        <thead class="table-light">
+        <tr>
+    `;
+
+    headers.forEach(h => {
+        html += `<th style="width:${width}">${h}</th>`;
+    });
+
+    html += "</tr></thead><tbody>";
 
     rows.forEach(r => {
         html += "<tr>";
@@ -148,7 +263,8 @@ function createTable(title, headers, rows) {
         html += "</tr>";
     });
 
-    html += "</table>";
+    html += "</tbody></table></div>";
+
     return html;
 }
 
@@ -164,6 +280,29 @@ function header(name) {
     return `<div class="block-header">${name}</div>`;
 }
 
+function createTableSummary(headers, rows) {
+    if (!rows.length) return "";
+
+    let html = `
+        <div class="table-responsive">
+        <table class="table table-bordered table-sm table-hover align-middle data-table">
+        <thead class="table-light"><tr>
+    `;
+
+    headers.forEach(h => html += `<th>${h}</th>`);
+    html += "</tr></thead><tbody>";
+
+    rows.forEach(r => {
+        html += "<tr>";
+        r.forEach(c => html += `<td>${c ?? ""}</td>`);
+        html += "</tr>";
+    });
+
+    html += "</tbody></table></div>";
+
+    return html;
+}
+
 
 // =====================
 // SUMMARY
@@ -171,10 +310,8 @@ function header(name) {
 
 function Summary() {
 
-    const keywordHit = textMatch("summary");
-
     const rows = state.data.summary
-        .filter(r => keywordHit || match(r))
+        .filter(r => state.search === "" || match(r))
         .map(s => [
             s.array_name,
             s.storage_type,
@@ -187,8 +324,7 @@ function Summary() {
 
     if (!rows.length) return "";
 
-    return createTable(
-        "Summary",
+    return createTableSummary(
         ["Array Name","Type","Model","IP","Serial","Region","Firmware"],
         rows
     );
@@ -205,16 +341,29 @@ function Unity() {
 
         const arrayHit = textMatch(u.array_name);
 
-        const capacity = u.capacity.filter(r => arrayHit || match(r));
-        const nas = u.nas.filter(r => arrayHit || match(r));
-        const repl = u.replication.filter(r => arrayHit || match(r));
+        const capacityHit = textMatch("capacity");
+        const nasHit = textMatch("nas") || textMatch("nas servers");
+        const replHit = textMatch("replication");
+
+        const capacity = u.capacity.filter(r =>
+            arrayHit || capacityHit || match(r)
+        );
+
+        const nas = u.nas.filter(r =>
+            arrayHit || nasHit || match(r)
+        );
+
+        const repl = u.replication.filter(r =>
+            arrayHit || replHit || match(r)
+        );
 
         if (!capacity.length && !nas.length && !repl.length) return "";
 
         return `
         ${header(u.array_name)}
 
-        ${createTable("Capacity",
+        ${createTable(
+            "Capacity",
             ["Pool Name","Total TB","Used %","Remaining TB"],
             capacity.map(c => [
                 (c.name || "").toUpperCase(),
@@ -224,7 +373,8 @@ function Unity() {
             ])
         )}
 
-        ${createTable("NAS Servers",
+        ${createTable(
+            "NAS Servers",
             ["Name","NFSv3","NFSv4","CIFS","Multiprotocol"],
             nas.map(n => [
                 n.name,
@@ -235,12 +385,13 @@ function Unity() {
             ])
         )}
 
-        ${createTable("Replication",
-            ["Target Array Name","Model","Replication Type"],
+        ${createTable(
+            "Replication",
+            ["Remote Array","Model","Connection"],
             repl.map(r => [
-            (r.name || "").toUpperCase(),
-            r.model,
-            r.connection
+                (r.name || "").toUpperCase(),
+                r.model,
+                r.connection
             ])
         )}
         `;
@@ -258,22 +409,36 @@ function NetApp() {
 
         const arrayHit = textMatch(n.array_name);
 
-        const aggr = n.aggregates.filter(r => arrayHit || match(r));
-        const vs = n.vservers.filter(r => arrayHit || match(r));
+        const aggrHit = textMatch("aggregate");
+        const vsHit = textMatch("vserver") || textMatch("v server");
+
+        const aggr = n.aggregates.filter(r =>
+            arrayHit || aggrHit || match(r)
+        );
+
+        const vs = n.vservers.filter(r =>
+            arrayHit || vsHit || match(r)
+        );
 
         if (!aggr.length && !vs.length) return "";
 
         return `
         ${header(n.array_name)}
 
-        ${createTable("Aggregates",
+        ${createTable(
+            "Aggregates",
             ["Name","Size","Available","Used %","State"],
             aggr.map(a => [
-                a.name, a.size, a.available, a.used_percent, a.state
+                a.name,
+                a.size,
+                a.available,
+                a.used_percent,
+                a.state
             ])
         )}
 
-        ${createTable("VServers",
+        ${createTable(
+            "VServers",
             ["Name","Type","State","Root Volume","Aggregate"],
             vs.map(v => [
                 v.name,
@@ -300,20 +465,7 @@ function render() {
         NetApp();
 
     document.getElementById("app").innerHTML =
-        html || `<div style="padding:20px;color:#777;">No results found</div>`;
-}
-
-
-// =====================
-// DEBOUNCE
-// =====================
-
-function debounce(fn, delay) {
-    let t;
-    return (...args) => {
-        clearTimeout(t);
-        t = setTimeout(() => fn(...args), delay);
-    };
+        html || `<div class="alert alert-secondary mt-4">No results found</div>`;
 }
 
 
@@ -321,28 +473,54 @@ function debounce(fn, delay) {
 // EVENTS
 // =====================
 
-document.getElementById("search").addEventListener("keyup",
-    debounce(e => {
-        state.search = e.target.value.toLowerCase();
+const searchInput = document.getElementById("search");
+const clearBtn = document.getElementById("clearBtn");
+
+// ---- SEARCH INPUT ----
+searchInput.addEventListener("keyup", function(e) {
+    state.search = e.target.value.toLowerCase().trim();
+
+    // show/hide clear button
+    clearBtn.style.display = state.search ? "inline" : "none";
+
+    render();
+});
+
+// ---- CLEAR BUTTON CLICK ----
+clearBtn.addEventListener("click", function() {
+    searchInput.value = "";
+    state.search = "";
+    clearBtn.style.display = "none";
+    render();
+    searchInput.focus();
+});
+
+// ---- ESC KEY SUPPORT ----
+searchInput.addEventListener("keydown", function(e) {
+    if (e.key === "Escape") {
+        searchInput.value = "";
+        state.search = "";
+        clearBtn.style.display = "none";
         render();
-    }, 250)
-);
+    }
+});
 
 
 // INIT
 render();
+
+</script>
+
+</body>
+</html>
 """
 
-    # inject data
+    # SAFE INJECTION
     html = html.replace("__DATA__", json.dumps(data))
     html = html.replace("__TIME__", datetime.now().strftime("%d-%b-%Y %H:%M"))
 
-    # write files
-    Path("discovery_portal.html").write_text(html)
-    Path("styles.css").write_text(css)
-    Path("app.js").write_text(js)
-
-    print("✅ Generated: HTML + CSS + JS (modular)")
+    OUTPUT_HTML.write_text(html)
+    print("Portal created & uploaded at:", OUTPUT_HTML)
 
 
 def main():
